@@ -11,6 +11,7 @@ pydantic = "*"
 pandera = "*"
 sqlalchemy = "*"
 "sqlalchemy.ext" = "*"
+python-multipart = "*"
 
 [dev-packages]
 
