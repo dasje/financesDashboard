@@ -14,15 +14,7 @@ class Users(Base):
     email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(String, unique=True)
     sign_up_date: Mapped[date] = mapped_column(Date)
-
-    @validates('email')
-    def validate_email(self, key, value):
-        pattern = r'^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$'
-        if re.match(pattern):
-            return value
-        else:
-            raise ValueError("Invalid email format.")
-
+    
 
 class Auth(Base):
     __tablename__ = "auth"
