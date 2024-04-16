@@ -28,6 +28,6 @@ class User(BaseModel):
     password: Annotated[str, AfterValidator(validate_password)]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 
