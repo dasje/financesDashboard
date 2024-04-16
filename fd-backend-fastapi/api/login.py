@@ -8,6 +8,14 @@ from fastapi import HTTPException
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
 def sign_up_user(user: User) -> BaseResponse:
     """
     If user details passed schema validations, add user to 'user' table in database.
@@ -24,7 +32,7 @@ def sign_up_user(user: User) -> BaseResponse:
     
     user_to_insert = Users()
     user_to_insert.email = user.email
-    user_to_insert.hashed_password = pwd_context.hash(user.password)
+    user_to_insert.hashed_password = get_password_hash(user.password)
     user_to_insert.sign_up_date = datetime.now()
 
     new_user = add_item(user_to_insert)
