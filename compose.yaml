@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: fd_db
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+    ports:
+      - "5433:5433"
+  api:
+    build:
+      context: fd-backend-fastapi
+      dockerfile: ./dockerfile
+    container_name: fb_fastapi_backend
+    environment:
+      PORT: 8000
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    restart: "no"
