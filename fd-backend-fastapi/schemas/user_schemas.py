@@ -1,7 +1,7 @@
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 from pydantic.functional_validators import AfterValidator
 import re
-from typing_extensions import Annotated
+from typing_extensions import Annotated, Union
 
 def validate_email(value):
     pattern = r'^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$'
@@ -29,5 +29,12 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
     
+
+class TokenData(BaseModel):
+    user_email: Union[str, None] = None
 
