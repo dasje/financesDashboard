@@ -8,3 +8,7 @@ Add a .env file with the following keys:
 + POSTGRES_USER
 + POSTGRES_SERVICE_NAME
 + DB_PORT
+
+## Endpoints
+- /sign_up [email, password]
+- /login [email, password]
