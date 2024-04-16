@@ -13,6 +13,7 @@ sqlalchemy = "*"
 "sqlalchemy.ext" = "*"
 python-multipart = "*"
 psycopg2 = "*"
+passlib = {version = "*", extras = ["bcrypt"]}
 
 [dev-packages]
 
