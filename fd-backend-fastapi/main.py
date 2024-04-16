@@ -1,12 +1,9 @@
-from typing import Union
 from typing_extensions import Annotated
 
 from fastapi import FastAPI, Depends, status
-from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
 
-from db.db import engine, get_db
+from db.db import engine
 from models.models import Base
 from schemas.user_schemas import User
 from schemas.response_schemas import BaseResponse
