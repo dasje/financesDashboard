@@ -3,6 +3,12 @@ from typing_extensions import Annotated
 
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer
+from contextlib import asynccontextmanager
+
+from db.db import engine
+from models.models import Base
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
