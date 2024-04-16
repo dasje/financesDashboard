@@ -1,6 +1,8 @@
+from typing_extensions import Union
+
 from sqlalchemy.orm import Session
+
 from db.db import get_db
-from sqlalchemy.orm import Session
 
 def add_item(item) -> bool:
     db = get_db()
@@ -17,7 +19,7 @@ def add_item(item) -> bool:
         return e
     
 
-def get_item(model, where_args: list):
+def get_item(model, where_args: list)-> Union[dict, None]:
     db = get_db()
     session: Session = next(db)
     try:
