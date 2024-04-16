@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 from datetime import date
 import re
 
-from ..db.db import Base
+from db.db import Base
 
 
 class Users(Base):
