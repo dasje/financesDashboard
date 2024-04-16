@@ -22,7 +22,6 @@ async def read_root(token: Annotated[str, Depends(oauth2_scheme)]):
 
 @app.post("/sign_up", status_code=status.HTTP_201_CREATED, tags=['login'])
 async def add_user(user: User) -> BaseResponse:
-    print("Validation passed at endpoint invocation.")
     return sign_up_user(user=user)
 
 

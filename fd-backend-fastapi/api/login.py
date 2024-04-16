@@ -1,9 +1,10 @@
 from schemas.user_schemas import User
-from schemas.response_schemas import BaseResponse
+from schemas.response_schemas import BaseResponse, OutgoingMessage
 from models.models import Users
 from passlib.context import CryptContext
 from datetime import datetime
 from crud.general_crud import add_item, get_item
+from fastapi import HTTPException
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -19,7 +20,7 @@ def sign_up_user(user: User) -> BaseResponse:
     """
     user_exists = get_item(Users, [Users.email == user.email])
     if user_exists:
-        return BaseResponse(message="User already exists.")
+        raise HTTPException(400, detail=OutgoingMessage.user_exists.value)
     
     user_to_insert = Users()
     user_to_insert.email = user.email
@@ -28,8 +29,8 @@ def sign_up_user(user: User) -> BaseResponse:
 
     new_user = add_item(user_to_insert)
     if new_user == user_to_insert:
-        return BaseResponse(message="User added.")
-    return BaseResponse(message="User not added.")
+        return BaseResponse(message=OutgoingMessage.user_added.value)
+    return HTTPException(500, detail=OutgoingMessage.user_not_added.value)
 
     
 def login_user(user: User) -> BaseResponse:
