@@ -8,3 +8,4 @@ sqlalchemy.ext
 python-multipart==0.0.9
 psycopg2
 passlib==1.7.4
+python-jose==3.3.0
