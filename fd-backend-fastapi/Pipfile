@@ -12,6 +12,7 @@ pandera = "*"
 sqlalchemy = "*"
 "sqlalchemy.ext" = "*"
 python-multipart = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
