@@ -20,7 +20,10 @@ from schemas.response_schemas import (
     BaseResponse,
     OutgoingMessage
 )
-from models.models import Users
+from models.models import (
+    Users,
+    Auth
+)
 
 from config import (
     SECRET_KEY,
@@ -31,7 +34,7 @@ from config import (
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
@@ -84,7 +87,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 def authenticate_user(email: str, password: str) -> Users:
     """
     Confirm user registered in db.
-    Veryify entered password is correct.
+    Verify entered password is correct.
 
     Args:
         email (str)
@@ -95,9 +98,10 @@ def authenticate_user(email: str, password: str) -> Users:
     """
     user = get_item(Users, [Users.email == email])
     if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    pwd = verify_password(password, user.hashed_password)
+    if not pwd:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
     return user
 
 
@@ -126,9 +130,18 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> dic
     except JWTError:
         raise credentials_exception
     user = get_item(Users, [Users.email == token_data.user_email])
-    if user is None:
+    auth = get_item(Auth, [Auth.user_id == user.id])
+    if user is None or auth is None:
         raise credentials_exception
-    return user
+    return auth
+
+
+async def get_user_active_status(
+    current_user: Annotated[Users, Depends(get_current_user)],
+):
+    if not current_user.active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
 
 
 def sign_up_user(user: User) -> BaseResponse:
@@ -149,6 +162,7 @@ def sign_up_user(user: User) -> BaseResponse:
     user_to_insert.email = user.email
     user_to_insert.hashed_password = get_password_hash(user.password)
     user_to_insert.sign_up_date = datetime.now()
+    user_to_insert.active = True
 
     new_user = add_item(user_to_insert)
     if new_user == user_to_insert:
@@ -156,7 +170,7 @@ def sign_up_user(user: User) -> BaseResponse:
     return HTTPException(500, detail=OutgoingMessage.user_not_added.value)
 
     
-def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> BaseResponse:
+def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
     """
     Args:
         form_data (Annotated[OAuth2PasswordRequestForm, Depends)
@@ -178,4 +192,13 @@ def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Ba
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
+
+    auth_to_add = Auth()
+    auth_to_add.user_id = user.id
+    auth_to_add.active = True
+    auth_to_add.auth_token = access_token
+    auth_to_add.login_datetime = datetime.now()
+    auth_to_add.auto_logout_datetime = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    add_item(auth_to_add)
+
     return Token(access_token=access_token, token_type="bearer")

@@ -7,7 +7,12 @@ from db.db import engine
 from models.models import Base
 from schemas.user_schemas import User, Token
 from schemas.response_schemas import BaseResponse
-from api.login import sign_up_user, login_user 
+from api.login import (
+    sign_up_user,
+    login_user,
+    oauth2_scheme,
+    get_user_active_status,
+)
 
 Base.metadata.create_all(bind=engine)
 
@@ -21,3 +26,8 @@ async def add_user(user: User) -> BaseResponse:
 @app.post("/login", status_code=status.HTTP_201_CREATED, tags=['login'])
 async def access_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],) -> Token:
     return login_user(form_data=form_data)
+
+
+@app.get("/test")
+async def test(user: Annotated[str, Depends(get_user_active_status)]):
+    return {"user": user}
