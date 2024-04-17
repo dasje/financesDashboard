@@ -20,3 +20,5 @@ services:
     env_file:
       - .env
     restart: "no"
+    depends_on:
+      - postgres
