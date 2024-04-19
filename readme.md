@@ -26,9 +26,33 @@ This project uses a containerized Postgres database. It is being developed witho
 
 ### Models
 
-users
-|column|type|description|
-|---|---|---|
-| | | |
-| | | |
-| | | |
+#### users
+
+| column          | type    | description                    |
+| --------------- | ------- | ------------------------------ |
+| id              | uuid    | unique id                      |
+| email           | string  | user email                     |
+| hashed_password | string  | user password stored as a hash |
+| sign_up_date    | date    | sign up date                   |
+| active          | boolean | is the account active?         |
+
+#### auth
+
+| column                 | type     | description                                        |
+| ---------------------- | -------- | -------------------------------------------------- |
+| id                     | uuid     | unique id                                          |
+| user_id                | uuid     | foreign key with users table                       |
+| auth_token             | string   | authentication token logged in with                |
+| login_datetime         | datetime | login datetime                                     |
+| auto_logout_datetime   | datetime | datetime on which user is automatically logged out |
+| actual_logout_datetime | datetime | datetime on which user logged out                  |
+| active                 | boolean  | user status                                        |
+
+#### uploads
+
+| column          | type     | description                             |
+| --------------- | -------- | --------------------------------------- |
+| id              | uuid     | unique id                               |
+| user_id         | uuid     | foreign key with users table            |
+| filename        | string   | name of file at upload (with extension) |
+| upload_datetime | datetime | datetime of file upload                 |

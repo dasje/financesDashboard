@@ -35,4 +35,4 @@ class Uploads(Base):
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
     filename: Mapped[str] = mapped_column(String(50))
-    upload_datetime: Mapped[date] = mapped_column(Date)
+    upload_datetime: Mapped[datetime] = mapped_column(DateTime)
