@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from pydantic.functional_validators import AfterValidator
 import re
 from typing_extensions import Annotated, Union
+from datetime import datetime
 
 def validate_email(value):
     pattern = r'^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$'
@@ -32,6 +33,7 @@ class User(BaseModel):
 
 class Token(BaseModel):
     access_token: str
+    expires: int
     token_type: str
     
 

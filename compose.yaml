@@ -8,11 +8,11 @@ services:
       POSTGRES_USER: postgres
     ports:
       - "5433:5433"
-  api:
+  be_fastapi:
     build:
       context: fd-backend-fastapi
       dockerfile: ./dockerfile
-    container_name: fb_fastapi_backend
+    container_name: fd_fastapi_backend
     environment:
       PORT: 8000
     ports:
@@ -22,3 +22,15 @@ services:
     restart: "no"
     depends_on:
       - postgres
+  fe_react:
+    build:
+      context: fd-frontend-react
+      dockerfile: ./dockerfile
+    container_name: fd_react_frontend
+    environment:
+      PORT: 3000
+    ports:
+      - '3000:80'
+    env_file:
+      - .env
+    restart: "no"
