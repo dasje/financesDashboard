@@ -18,7 +18,7 @@ PGADMIN_DEFAULT_PASSWORD
 #### Endpoints
 
 - /sign_up [email, password]
-- /login [email, password]
+- /login form-data{email, password}
 
 ## Database
 
