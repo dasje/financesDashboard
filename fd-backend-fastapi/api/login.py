@@ -185,7 +185,7 @@ def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> To
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail=OutgoingMessage.user_detail_incorrect.value,
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

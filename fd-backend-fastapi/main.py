@@ -23,7 +23,7 @@ async def add_user(user: User) -> BaseResponse:
     return sign_up_user(user=user)
 
 
-@app.post("/login", status_code=status.HTTP_201_CREATED, tags=['login'])
+@app.post("/login", status_code=status.HTTP_200_OK, tags=['login'])
 async def access_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],) -> Token:
     return login_user(form_data=form_data)
 
