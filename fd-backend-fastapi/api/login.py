@@ -98,10 +98,10 @@ def authenticate_user(email: str, password: str) -> Users:
     """
     user = get_item(Users, [Users.email == email])
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(status_code=400, detail=OutgoingMessage.user_detail_incorrect.value)
     pwd = verify_password(password, user.hashed_password)
     if not pwd:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(status_code=400, detail=OutgoingMessage.user_detail_incorrect.value)
     return user
 
 
@@ -201,4 +201,4 @@ def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> To
     auth_to_add.auto_logout_datetime = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     add_item(auth_to_add)
 
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(access_token=access_token, expires=ACCESS_TOKEN_EXPIRE_MINUTES*60, token_type="bearer")
