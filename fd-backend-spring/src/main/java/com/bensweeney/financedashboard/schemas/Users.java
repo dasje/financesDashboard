@@ -1,0 +1,4 @@
+@Table
+class Users {
+    
+}
